@@ -104,11 +104,11 @@ function _update()
         end
 
         ---- Rotation
-        if btn(4) or btn(5) then
+        if btnp(4) or btnp(5) then
+            currently_rotating = true
             rotate()
         end
 
-        -- Drop fast or wait for timer
         if btn(3) or drop.timer % speed == 0 then
            drop.i +=1
         end
