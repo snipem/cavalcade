@@ -13,6 +13,7 @@ drop = {}
 -- Starting point for drop
 drop.i = 0
 drop.j = 3
+drop.timer = 10
 
 MAX_LINES = 16
 MAX_COLUMNS = 5
@@ -40,15 +41,18 @@ end
 
 function _update()
     if drop.i < MAX_LINES-1 then
-        drop.i +=1
-
         if btn(1) and drop.j < MAX_COLUMNS then
             drop.j += 1
         elseif btn(0) and drop.j > 0 then
             drop.j -= 1
         end
 
+        if drop.timer % 4 == 0 then
+           drop.i +=1
+        end
     end
+
+    drop.timer += 1
     printh(drop.i)
 end
 
