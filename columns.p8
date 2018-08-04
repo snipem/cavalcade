@@ -10,10 +10,6 @@ bottom_left = 32
 bottom_right = 96
 
 drop = {}
--- starting point for drop
-drop.i = 0
-drop.j = 3
-drop.timer = 10
 
 max_lines = 16
 max_columns = 5
@@ -36,10 +32,24 @@ function reset_board()
         end
     end
 
+
+    -- TODO Debug
+    board[15][1].color = 0
+
+end
+
+function drop_new ()
+    -- starting point for drop
+    drop.i = 0
+    drop.j = 3
+    drop.color = rnd(2)
+    drop.timer = 10
 end
 
 function _init()
+    printh("Called _init")
     reset_board()
+    drop_new()
 end
 
 function _update()
@@ -57,6 +67,10 @@ function _update()
         if btn(3) or drop.timer % speed == 0 then
            drop.i +=1
         end
+    elseif drop.i < max_lines then
+        printh("=== Drop to ground")
+        board[drop.i][drop.j].color = drop.color
+        drop_new()
     end
 
     drop.timer += 1
@@ -68,7 +82,7 @@ function _draw ()
     map( 0, 0, 0, 0, 128, 128)
 
     -- Draw drop
-    spr(1, board[drop.i][drop.j].x, board[drop.i][drop.j].y)
+    spr(drop.color, board[drop.i][drop.j].x, board[drop.i][drop.j].y)
     print("X=" .. drop.i, 103,25, 7)
     print("y=" .. drop.j, 103,34, 7)
 
@@ -76,7 +90,18 @@ function _draw ()
     for i=0,max_lines do
         for j=0,max_columns do
 
-            -- spr(1, board[drop.i][drop.j].x, board[drop.i][drop.j].y)
+            blocked_spot = board[i][j]
+            if blocked_spot.color then
+                printh("Blocked spot in: " .. i ..",".. j)
+                spr(blocked_spot.color, board[i][j].x, board[i][j].y)
+            end
+
+            -- if board[i][j] and board[i][j].color > 0 then
+            --     printh("Existing stone in " .. board[i][j])
+            --     present = board[i][j]
+            --     spr(present.color, board[i][j].x, board[i][j].y)
+            -- -- spr(1, board[drop.i][drop.j].x, board[drop.i][drop.j].y)
+            -- end
         end
     end
 
