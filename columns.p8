@@ -51,6 +51,15 @@ function generate_new_colors()
     return colors
 end
 
+function can_move_in_direction(direction)
+    if not board[drop.i][drop.j+direction].color then
+        return true
+    else
+        return false
+    end
+end
+
+
 function _init()
     printh("Called _init")
     reset_board()
@@ -81,13 +90,18 @@ function _update()
             print("Game Over")
             _init()
         end
+        calculate_points()
         drop_new()
     else
+
+        -- TODO Remove me, right
+        -- can_move_in_direction(0)
+
         -- If left and not over left border
-        if btn(1) and drop.j < max_columns then
+        if btn(1) and drop.j < max_columns and can_move_in_direction(1) then
             drop.j += 1
         -- If right and if not over right border
-        elseif btn(0) and drop.j > 0 then
+        elseif btn(0) and drop.j > 0 and can_move_in_direction(-1) then
             drop.j -= 1
         end
 
@@ -98,6 +112,10 @@ function _update()
     end
 
     drop.timer += 1
+end
+
+function calculate_points()
+    -- TODO Calculate Points and remove stones
 end
 
 function _draw ()
