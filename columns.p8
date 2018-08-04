@@ -10,6 +10,7 @@ bottom_left = 32
 bottom_right = 96
 
 drop = {}
+next_drop = {}
 
 max_lines = 16
 max_columns = 5
@@ -40,13 +41,21 @@ function drop_new ()
     -- starting point for drop
     drop.i = 0
     drop.j = 3
-    drop.color = rnd(number_of_colors)
+    drop.colors = next_drop.colors
+    next_drop.colors = generate_new_colors()
     drop.timer = 10
+end
+
+function generate_new_colors()
+    colors = { rnd(number_of_colors), rnd(number_of_colors), rnd(number_of_colors) }
+    return colors
 end
 
 function _init()
     printh("Called _init")
     reset_board()
+    -- Initial set of colors
+    next_drop.colors = generate_new_colors()
     drop_new()
 end
 
@@ -63,8 +72,15 @@ function _update()
     end
 
     if block_below then
-        printh("=== Drop ended")
-        board[drop.i][drop.j].color = drop.color
+        printh("Drop ended")
+        if drop.i > 0 then
+            board[drop.i][drop.j].color = drop.colors[1]
+            board[drop.i-1][drop.j].color = drop.colors[2]
+            board[drop.i-2][drop.j].color = drop.colors[3]
+        else
+            print("Game Over")
+            _init()
+        end
         drop_new()
     else
         -- If left and not over left border
@@ -82,7 +98,6 @@ function _update()
     end
 
     drop.timer += 1
-    printh(drop.i)
 end
 
 function _draw ()
@@ -90,9 +105,15 @@ function _draw ()
     map( 0, 0, 0, 0, 128, 128)
 
     -- Draw drop
-    spr(drop.color, board[drop.i][drop.j].x, board[drop.i][drop.j].y)
-    print("X=" .. drop.i, 103,25, 7)
-    print("y=" .. drop.j, 103,34, 7)
+    spr(drop.colors[1], board[drop.i][drop.j].x, board[drop.i][drop.j].y)
+    if (drop.i > 0) then
+        spr(drop.colors[2], board[drop.i-1][drop.j].x, board[drop.i-1][drop.j].y)
+end
+    if (drop.i > 1) then
+    spr(drop.colors[3], board[drop.i-2][drop.j].x, board[drop.i-2][drop.j].y)
+end
+    print("i=" .. drop.i, 103,25, 7)
+    print("j=" .. drop.j, 103,34, 7)
 
     -- Draw existing board
     for i=0,max_lines do
