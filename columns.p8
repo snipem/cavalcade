@@ -69,19 +69,18 @@ function _draw ()
     --
     map( 0, 0, 0, 0, 128, 128)
 
+
+    -- Draw drop
+    spr(1, board[drop.i][drop.j].x, board[drop.i][drop.j].y)
+    print("X=" .. drop.i, 103,25)
+    print("y=" .. drop.j, 103,34)
+
+    -- Draw existing board
+
     for i=0,max_lines do
         for j=0,max_columns do
-            -- spr(1, board[i][j].x, board[i][j].y)
-            -- printh(board[drop.i][drop.j])
-            -- printh(drop.j)
-            spr(1, board[drop.i][drop.j].x, board[drop.i][drop.j].y)
-            print("X=" .. drop.i, 103,25)
-            print("y=" .. drop.j, 103,34)
-            -- slot = {}
-            -- slot.empty = false
-            -- slot.x = i * 8
-            -- slot.y = j * 8
-            -- board[i][j] = slot
+
+            -- spr(1, board[drop.i][drop.j].x, board[drop.i][drop.j].y)
         end
     end
 
