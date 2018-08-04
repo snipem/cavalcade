@@ -5,7 +5,7 @@ __lua__
 -- by zep
 -- run: ./reload.sh
 
-board = {}          -- create the matrix
+board = {}
 bottom_left = 32
 bottom_right = 96
 
@@ -43,14 +43,18 @@ function _init()
 end
 
 function _update()
+    -- Only if drop is still in free fall
     if drop.i < max_lines-1 then
+        -- If left and not over left border
         if btn(1) and drop.j < max_columns then
             drop.j += 1
+        -- If right and if not over right border
         elseif btn(0) and drop.j > 0 then
             drop.j -= 1
         end
 
-        if drop.timer % speed == 0 then
+        -- Drop fast or wait for timer
+        if btn(3) or drop.timer % speed == 0 then
            drop.i +=1
         end
     end
@@ -60,15 +64,8 @@ function _update()
 end
 
 function _draw ()
-    -- draw backgorund
     cls()
-    -- rectfill(0, 0, 128, 128, 7)
-    -- rectfill(bottom_left, 0, bottom_right, 128, 0)
-    -- rectfill(bottom_left, 0, bottom_left+7, 128, 1)
-    -- rectfill(bottom_right-8, 0, bottom_right, 128, 1)
-    --
     map( 0, 0, 0, 0, 128, 128)
-
 
     -- Draw drop
     spr(1, board[drop.i][drop.j].x, board[drop.i][drop.j].y)
@@ -76,7 +73,6 @@ function _draw ()
     print("y=" .. drop.j, 103,34)
 
     -- Draw existing board
-
     for i=0,max_lines do
         for j=0,max_columns do
 
