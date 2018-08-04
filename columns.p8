@@ -9,6 +9,11 @@ board = {}          -- create the matrix
 bottom_left = 32
 bottom_right = 96
 
+drop = {}
+-- Starting point for drop
+drop.i = 0
+drop.j = 3
+
 function reset_board()
     printh("Resetting board...")
     for i=0,16 do
@@ -30,7 +35,11 @@ function _init()
     reset_board()
 end
 
-function _update ()
+function _update()
+    drop.i +=1
+end
+
+function _draw ()
     -- Draw backgorund
     cls()
     rectfill(0, 0, 128, 128, 7)
@@ -38,8 +47,10 @@ function _update ()
 
     for i=0,16 do
         for j=0,5 do
-            printh(board[i][j].x)
-            spr(1, board[i][j].x, board[i][j].y)
+            -- spr(1, board[i][j].x, board[i][j].y)
+            printh(board[drop.i][drop.j])
+            -- printh(drop.j)
+            spr(1, board[drop.i][drop.j].x, board[drop.i][drop.j].y)
             -- slot = {}
             -- slot.empty = false
             -- slot.x = i * 8
