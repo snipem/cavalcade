@@ -54,7 +54,17 @@ end
 
 function _update()
     -- Only if drop is still in free fall
-    if drop.i < max_lines-1 then
+    block_below = false
+
+    if board[drop.i+1][drop.j].color then
+        printh("Found block below")
+        block_below = true
+    elseif drop.i == max_lines-1 then
+        printh("Found bottom below")
+        block_below = true
+    end
+
+    if not block_below then
         -- If left and not over left border
         if btn(1) and drop.j < max_columns then
             drop.j += 1
@@ -67,8 +77,9 @@ function _update()
         if btn(3) or drop.timer % speed == 0 then
            drop.i +=1
         end
-    elseif drop.i < max_lines then
-        printh("=== Drop to ground")
+
+    else
+        printh("=== Drop ended")
         board[drop.i][drop.j].color = drop.color
         drop_new()
     end
