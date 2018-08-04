@@ -14,11 +14,14 @@ drop = {}
 drop.i = 0
 drop.j = 3
 
+MAX_LINES = 16
+MAX_COLUMNS = 5
+
 function reset_board()
     printh("Resetting board...")
-    for i=0,16 do
+    for i=0,MAX_LINES do
     board[i] = {}     -- create a new row
-        for j=0,5 do
+        for j=0,MAX_COLUMNS do
             slot = {}
             slot.empty = false
             -- start from below
@@ -36,7 +39,17 @@ function _init()
 end
 
 function _update()
-    drop.i +=1
+    if drop.i < MAX_LINES-1 then
+        drop.i +=1
+
+        if btn(1) and drop.j < MAX_COLUMNS then
+            drop.j += 1
+        elseif btn(0) and drop.j > 0 then
+            drop.j -= 1
+        end
+
+    end
+    printh(drop.i)
 end
 
 function _draw ()
@@ -45,10 +58,10 @@ function _draw ()
     rectfill(0, 0, 128, 128, 7)
     rectfill(bottom_left, 0, bottom_right, 128, 0)
 
-    for i=0,16 do
-        for j=0,5 do
+    for i=0,MAX_LINES do
+        for j=0,MAX_COLUMNS do
             -- spr(1, board[i][j].x, board[i][j].y)
-            printh(board[drop.i][drop.j])
+            -- printh(board[drop.i][drop.j])
             -- printh(drop.j)
             spr(1, board[drop.i][drop.j].x, board[drop.i][drop.j].y)
             -- slot = {}
