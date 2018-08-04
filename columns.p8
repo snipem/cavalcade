@@ -6,42 +6,29 @@ __lua__
 -- run: ./reload.sh
 
 board = {}          -- create the matrix
+bottom_left = 32
+bottom_right = 96
 
 function reset_board()
     printh("Resetting board...")
     for i=0,16 do
     board[i] = {}     -- create a new row
-        for j=0,6 do
+        for j=0,5 do
             slot = {}
             slot.empty = false
             -- start from below
-            slot.x = 128 - j * 8
-            slot.y = 64 - i * 8
+            spacer = 8
+            slot.x = spacer + bottom_left + j * 8
+            slot.y = i * 8
             board[i][j] = slot
         end
     end
 
 end
 
--- function new_game()
-
---     x = 64
---     y = 64
---     cls()
---     -- rectfill(0, 0, 128, 128, 0)
---     rectfill(32, 0, 96, 128, 7)
---     flip()
--- end
-
-
--- new_game()
-
 function _init()
     reset_board()
 end
-
-bottom_left = 32
-bottom_right = 96
 
 function _update ()
     -- Draw backgorund
@@ -50,7 +37,7 @@ function _update ()
     rectfill(bottom_left, 0, bottom_right, 128, 0)
 
     for i=0,16 do
-        for j=0,6 do
+        for j=0,5 do
             printh(board[i][j].x)
             spr(1, board[i][j].x, board[i][j].y)
             -- slot = {}
