@@ -69,8 +69,8 @@ function _draw ()
 
     -- Draw drop
     spr(1, board[drop.i][drop.j].x, board[drop.i][drop.j].y)
-    print("X=" .. drop.i, 103,25)
-    print("y=" .. drop.j, 103,34)
+    print("X=" .. drop.i, 103,25, 7)
+    print("y=" .. drop.j, 103,34, 7)
 
     -- Draw existing board
     for i=0,max_lines do
