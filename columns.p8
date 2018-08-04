@@ -32,10 +32,6 @@ function reset_board()
         end
     end
 
-
-    -- TODO Debug
-    board[15][1].color = 0
-
 end
 
 function drop_new ()
