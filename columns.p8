@@ -64,7 +64,11 @@ function _update()
         block_below = true
     end
 
-    if not block_below then
+    if block_below then
+        printh("=== Drop ended")
+        board[drop.i][drop.j].color = drop.color
+        drop_new()
+    else
         -- If left and not over left border
         if btn(1) and drop.j < max_columns then
             drop.j += 1
@@ -77,11 +81,6 @@ function _update()
         if btn(3) or drop.timer % speed == 0 then
            drop.i +=1
         end
-
-    else
-        printh("=== Drop ended")
-        board[drop.i][drop.j].color = drop.color
-        drop_new()
     end
 
     drop.timer += 1
