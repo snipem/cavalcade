@@ -18,6 +18,9 @@ drop.timer = 10
 MAX_LINES = 16
 MAX_COLUMNS = 5
 
+-- Bigger is slower
+SPEED = 8
+
 function reset_board()
     printh("Resetting board...")
     for i=0,MAX_LINES do
@@ -47,7 +50,7 @@ function _update()
             drop.j -= 1
         end
 
-        if drop.timer % 4 == 0 then
+        if drop.timer % SPEED == 0 then
            drop.i +=1
         end
     end
@@ -61,6 +64,8 @@ function _draw ()
     cls()
     rectfill(0, 0, 128, 128, 7)
     rectfill(bottom_left, 0, bottom_right, 128, 0)
+    rectfill(bottom_left, 0, bottom_left+7, 128, 1)
+    rectfill(bottom_right-8, 0, bottom_right, 128, 1)
 
     for i=0,MAX_LINES do
         for j=0,MAX_COLUMNS do
