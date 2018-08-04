@@ -94,15 +94,18 @@ function _update()
         drop_new()
     else
 
-        -- TODO Remove me, right
-        -- can_move_in_direction(0)
-
+        ---- Direction
         -- If left and not over left border
         if btn(1) and drop.j < max_columns and can_move_in_direction(1) then
             drop.j += 1
         -- If right and if not over right border
         elseif btn(0) and drop.j > 0 and can_move_in_direction(-1) then
             drop.j -= 1
+        end
+
+        ---- Rotation
+        if btn(4) or btn(5) then
+            rotate()
         end
 
         -- Drop fast or wait for timer
@@ -116,6 +119,18 @@ end
 
 function calculate_points()
     -- TODO Calculate Points and remove stones
+    printh("Calculation not yet implemented")
+end
+
+function rotate()
+    -- TODO Find a better way
+    first = drop.colors[1]
+    second = drop.colors[2]
+    third = drop.colors[3]
+
+    drop.colors[1] = second
+    drop.colors[2] = third
+    drop.colors[3] = first
 end
 
 function _draw ()
@@ -142,13 +157,6 @@ end
                 printh("Blocked spot in: " .. i ..",".. j)
                 spr(blocked_spot.color, board[i][j].x, board[i][j].y)
             end
-
-            -- if board[i][j] and board[i][j].color > 0 then
-            --     printh("Existing stone in " .. board[i][j])
-            --     present = board[i][j]
-            --     spr(present.color, board[i][j].x, board[i][j].y)
-            -- -- spr(1, board[drop.i][drop.j].x, board[drop.i][drop.j].y)
-            -- end
         end
     end
 
