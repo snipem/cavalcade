@@ -20,6 +20,8 @@ speed = 18
 
 number_of_colors = 6
 
+nr_cal = 0
+
 function reset_board()
     printh("resetting board...")
     for i=0,max_lines do
@@ -123,11 +125,11 @@ end
 function clears_up(i,j)
     -- TODO Calculate Points and remove stones
 
+    -- TODO Performance is bad
+    printh("calculating" .. nr_cal)
+    nr_cal +=1
+
     -- To the left xx0 if there is space to the left
-    debug.print({
-        board
-    })
-    
     color = board[i][j].color
     if j > 2 and
         board[i][j-1].color == color and
@@ -141,8 +143,7 @@ function clears_up(i,j)
     end
 
     -- To the right 0xx
-    -- TODO Bug when all to the right
-    if j < max_columns and
+    if j <= max_columns - 2 and
         board[i][j+1].color == color and
         board[i][j+2].color == color then
 
@@ -195,6 +196,7 @@ end
 end
     print("i=" .. drop.i, 103,25, 7)
     print("j=" .. drop.j, 103,34, 7)
+    print("fps=" .. stat(8), 103,43, 7)
 
     -- Draw existing board
     for i=0,max_lines do
@@ -203,12 +205,10 @@ end
             blocked_spot = board[i][j]
             if blocked_spot.color then
                 -- printh("Blocked spot in: " .. i ..",".. j)
-                if not clears_up(i,j) then
-                    spr(blocked_spot.color, board[i][j].x, board[i][j].y)
-                else
-                    printr("CLEAR BLOCK")
-                -- TODO remove block
-                end
+                -- TODO This calculates everything all the time and is very slow
+                clears_up(i,j)
+
+                spr(blocked_spot.color, board[i][j].x, board[i][j].y)
             end
         end
     end
