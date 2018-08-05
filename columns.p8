@@ -126,7 +126,9 @@ function clears_up(i,j)
     -- TODO Calculate Points and remove stones
 
     -- TODO Performance is bad
-    printh("calculating" .. nr_cal)
+    -- TODO Allow for "L" constellations, create debug map. Maybe nil elements at end
+
+    -- printh("calculating" .. nr_cal)
     nr_cal +=1
 
     -- To the left xx0 if there is space to the left
@@ -140,6 +142,8 @@ function clears_up(i,j)
         board[i][j].color = nil
         board[i][j-1].color = nil
         board[i][j-2].color = nil
+
+        gravity()
     end
 
     -- To the right 0xx
@@ -151,6 +155,7 @@ function clears_up(i,j)
         board[i][j].color = nil
         board[i][j+1].color = nil
         board[i][j+2].color = nil
+        gravity()
     end
 
     -- xx0xx 4!
@@ -160,6 +165,8 @@ function clears_up(i,j)
     --     board[i][j].color = nil
     --     board[i][j+1].color = nil
     --     board[i][j+2].color = nil
+    --
+        -- gravity()
     -- end
 
     -- Downwards
@@ -172,6 +179,7 @@ function clears_up(i,j)
         board[i][j].color = nil
         board[i+1][j].color = nil
         board[i+2][j].color = nil
+        gravity()
     end
 
     -- Upwards
@@ -184,12 +192,21 @@ function clears_up(i,j)
         board[i][j].color = nil
         board[i-1][j].color = nil
         board[i-2][j].color = nil
+        gravity()
     end
 end
 
 function gravity()
     -- TODO Invoke gravity for removed stones
     printh("Gravity not yet implemented")
+    for i=0,max_lines do
+        for j=0,max_columns do
+            if i+1 < max_lines and not board[i+1][j].color then
+                board[i+1][j].color = board[i][j].color
+                board[i][j].color = nil
+            end
+        end
+    end
 end
 
 function rotate()
