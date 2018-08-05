@@ -66,49 +66,49 @@ end
 
 
 function _init()
-    printh("Called _init")
+    printh("called _init")
     reset_board()
-    -- Initial set of colors
+    -- initial set of colors
     next_drop.colors = generate_new_colors()
     drop_new()
 end
 
 function _update()
-    -- Only if drop is still in free fall
+    -- only if drop is still in free fall
     block_below = false
 
     if board[drop.i+1][drop.j].color then
-        printh("Found block below")
+        printh("found block below")
         block_below = true
     elseif drop.i == max_lines-1 then
-        printh("Found bottom below")
+        printh("found bottom below")
         block_below = true
     end
 
     if block_below then
-        printh("Drop ended")
+        printh("drop ended")
         if drop.i > 0 then
             board[drop.i][drop.j].color = drop.colors[1]
             board[drop.i-1][drop.j].color = drop.colors[2]
             board[drop.i-2][drop.j].color = drop.colors[3]
         else
-            print("Game Over")
+            print("game over")
             _init()
         end
         gravity()
         drop_new()
     else
 
-        ---- Direction
-        -- If left and not over left border
+        ---- direction
+        -- if left and not over left border
         if btn(1) and drop.j < max_columns and can_move_in_direction(1) then
             drop.j += 1
-        -- If right and if not over right border
+        -- if right and if not over right border
         elseif btn(0) and drop.j > 0 and can_move_in_direction(-1) then
             drop.j -= 1
         end
 
-        ---- Rotation
+        ---- rotation
         if btnp(4) or btnp(5) then
             currently_rotating = true
             rotate()
@@ -123,45 +123,50 @@ function _update()
 end
 
 function clears_up(i,j)
-    -- TODO Calculate Points and remove stones
+    -- todo calculate points and remove stones
 
-    -- TODO Performance is bad
-    -- TODO Allow for "L" constellations, create debug map. Maybe nil elements at end
+    -- todo performance is bad
+    -- todo allow for "l" constellations, create debug map. maybe nil elements at end
 
     -- printh("calculating" .. nr_cal)
     nr_cal +=1
 
-    -- To the left xx0 if there is space to the left
+    -- to the left xx0 if there is space to the left
     color = board[i][j].color
     if j > 2 and
         board[i][j-1].color == color and
         board[i][j-2].color == color
         then
 
-        printh("MATCH to left")
+        printh("match to left")
         board[i][j].color = nil
         board[i][j-1].color = nil
         board[i][j-2].color = nil
 
+        sfx(2)
+
         gravity()
     end
 
-    -- To the right 0xx
+    -- to the right 0xx
     if j <= max_columns - 2 and
         board[i][j+1].color == color and
         board[i][j+2].color == color then
 
-        printh("MATCH to right")
+        printh("match to right")
         board[i][j].color = nil
         board[i][j+1].color = nil
         board[i][j+2].color = nil
+
+        sfx(2)
+
         gravity()
     end
 
     -- xx0xx 4!
     -- if board[i][j+1].color == 
     --     color == board[i][j+2].color then
-    --     printh("MATCH to right")
+    --     printh("match to right")
     --     board[i][j].color = nil
     --     board[i][j+1].color = nil
     --     board[i][j+2].color = nil
@@ -169,29 +174,35 @@ function clears_up(i,j)
         -- gravity()
     -- end
 
-    -- Downwards
+    -- downwards
     if i <= max_lines - 2 and
         board[i+1][j].color == color and
         board[i+2][j].color == color
         then
 
-        printh("MATCH to bottom")
+        printh("match to bottom")
         board[i][j].color = nil
         board[i+1][j].color = nil
         board[i+2][j].color = nil
+
+        sfx(2)
+
         gravity()
     end
 
-    -- Upwards
+    -- upwards
     if i > 2 and
         board[i-1][j].color == color and
         board[i-2][j].color == color
         then
 
-        printh("MATCH to top")
+        printh("match to top")
         board[i][j].color = nil
         board[i-1][j].color = nil
         board[i-2][j].color = nil
+
+        sfx(2)
+
         gravity()
     end
 
@@ -199,7 +210,7 @@ function clears_up(i,j)
 end
 
 function gravity()
-    -- TODO Invoke gravity for removed stones
+    -- todo invoke gravity for removed stones
     for i=0,max_lines do
         for j=0,max_columns do
             if i+1 < max_lines and not board[i+1][j].color then
@@ -211,7 +222,7 @@ function gravity()
 end
 
 function rotate()
-    -- TODO Find a better way to copy values
+    -- todo find a better way to copy values
     first = drop.colors[1]
     second = drop.colors[2]
     third = drop.colors[3]
@@ -219,13 +230,15 @@ function rotate()
     drop.colors[1] = second
     drop.colors[2] = third
     drop.colors[3] = first
+
+    sfx(1)
 end
 
 function _draw ()
     cls()
     map( 0, 0, 0, 0, 128, 128)
 
-    -- Draw drop
+    -- draw drop
     spr(drop.colors[1], board[drop.i][drop.j].x, board[drop.i][drop.j].y)
     if (drop.i > 0) then
         spr(drop.colors[2], board[drop.i-1][drop.j].x, board[drop.i-1][drop.j].y)
@@ -237,14 +250,14 @@ end
     print("j=" .. drop.j, 103,34, 7)
     -- print("fps=" .. stat(8), 103,43, 7)
 
-    -- Draw existing board
+    -- draw existing board
     for i=0,max_lines do
         for j=0,max_columns do
 
             blocked_spot = board[i][j]
             if blocked_spot.color then
-                -- printh("Blocked spot in: " .. i ..",".. j)
-                -- TODO This calculates everything all the time and is very slow
+                -- printh("blocked spot in: " .. i ..",".. j)
+                -- todo this calculates everything all the time and is very slow
                 clears_up(i,j)
 
                 spr(blocked_spot.color, board[i][j].x, board[i][j].y)
@@ -267,7 +280,7 @@ else
 end
 --- hack for external editor
 --
--- DEBUGGING
+-- debugging
 --
 debug = {}
 function debug.tstr(t, indent)
@@ -339,8 +352,8 @@ __map__
 1010101011000000000000121010101000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
 __sfx__
 0004011a00000000001905012250152500f2501a25031050130500000000000000000000000000070502005000000000000000000000072500f2500f250102500000000000000000000000000000000000000000
-0002010d00000000001c8501c8501c8501c8501c8501c8501a850188501e850000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
-000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+0003000000000000001c8501c8501c8501c8501c0501c0501a050180501605013050100500c0500a0500000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+00040101000001c8500d2501025013230172301d2302683023250292502c250312503325000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
 000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
 000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
 000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
