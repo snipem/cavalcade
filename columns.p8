@@ -194,11 +194,12 @@ function clears_up(i,j)
         board[i-2][j].color = nil
         gravity()
     end
+
+    gravity()
 end
 
 function gravity()
     -- TODO Invoke gravity for removed stones
-    printh("Gravity not yet implemented")
     for i=0,max_lines do
         for j=0,max_columns do
             if i+1 < max_lines and not board[i+1][j].color then
@@ -234,7 +235,7 @@ end
 end
     print("i=" .. drop.i, 103,25, 7)
     print("j=" .. drop.j, 103,34, 7)
-    print("fps=" .. stat(8), 103,43, 7)
+    -- print("fps=" .. stat(8), 103,43, 7)
 
     -- Draw existing board
     for i=0,max_lines do
