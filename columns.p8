@@ -24,6 +24,8 @@ next_drop = {}
 max_lines = 16
 max_columns = 5
 
+debug_mode = true
+
 -- bigger is slower
 speed = 18
 
@@ -262,9 +264,13 @@ end
     if (drop.i > 1) then
     spr(drop.colors[3], board[drop.i-2][drop.j].x, board[drop.i-2][drop.j].y)
 end
-    print("i=" .. drop.i, 10,25, 7)
-    print("j=" .. drop.j, 10,34, 7)
-    -- print("fps=" .. stat(8), 103,43, 7)
+
+    if debug_mode then
+        rectfill(5,20, 31,55, 0)
+        print("i=" .. drop.i, 7,25, 7)
+        print("j=" .. drop.j, 7,34, 7)
+        print("fps=" .. stat(8), 7,43, 7)
+    end
 
     print("score", 98,58, 7)
     print(score, 98,64, 7)
