@@ -162,8 +162,29 @@ function clears_up(i,j)
     --     board[i][j+2].color = nil
     -- end
 
-    -- Upwards
     -- Downwards
+    if i <= max_lines - 2 and
+        board[i+1][j].color == color and
+        board[i+2][j].color == color
+        then
+
+        printh("MATCH to bottom")
+        board[i][j].color = nil
+        board[i+1][j].color = nil
+        board[i+2][j].color = nil
+    end
+
+    -- Upwards
+    if i > 2 and
+        board[i-1][j].color == color and
+        board[i-2][j].color == color
+        then
+
+        printh("MATCH to top")
+        board[i][j].color = nil
+        board[i-1][j].color = nil
+        board[i-2][j].color = nil
+    end
 end
 
 function gravity()
