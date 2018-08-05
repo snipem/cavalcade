@@ -100,7 +100,7 @@ function _update()
     end
 
     if block_below then
-        printh(drop.nr .. " -drop ended")
+        printh(drop.nr .. " - drop ended")
         if drop.i > 0 then
             board[drop.i][drop.j].color = drop.colors[1]
             board[drop.i-1][drop.j].color = drop.colors[2]
