@@ -36,7 +36,7 @@ nr_cal = 0
 score = 0
 
 function reset_board()
-    printh(drop.nr .. "resetting board...")
+    printh(drop.nr .. " - resetting board...")
     for i=0,max_lines do
     board[i] = {}     -- create a new row
         for j=0,max_columns do
@@ -80,7 +80,7 @@ end
 
 
 function _init()
-    printh(drop.nr .. "called _init")
+    printh(drop.nr .. " - called _init")
     reset_board()
     -- initial set of colors
     next_drop.colors = generate_new_colors()
@@ -106,7 +106,8 @@ function _update()
             board[drop.i-1][drop.j].color = drop.colors[2]
             board[drop.i-2][drop.j].color = drop.colors[3]
         else
-            print("game over")
+            --  Game over
+            sfx(3)
             _init()
         end
         gravity()
@@ -265,10 +266,10 @@ end
     spr(drop.colors[3], board[drop.i-2][drop.j].x, board[drop.i-2][drop.j].y)
 end
 
-    -- Draw next
-    spr(next_drop.colors[1], 108, 16)
+    -- Draw next. Order has to be reversed since its the way the drop is rendered.
+    spr(next_drop.colors[1], 108, 32)
     spr(next_drop.colors[2], 108, 24)
-    spr(next_drop.colors[3], 108, 32)
+    spr(next_drop.colors[3], 108, 16)
     print("n", 101, 16)
     print("e", 101, 22)
     print("x", 101, 28)
