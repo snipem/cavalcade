@@ -45,6 +45,7 @@ function reset_board()
             spacer = 8
             slot.x = spacer + bottom_left + j * 8
             slot.y = i * 8
+            slot.delete = false
             board[i][j] = slot
         end
     end
@@ -154,9 +155,9 @@ function clears_up(i,j)
         then
 
         printh(drop.nr .. " - match to left")
-        board[i][j].color = nil
-        board[i][j-1].color = nil
-        board[i][j-2].color = nil
+        board[i][j].delete = true
+        board[i][j-1].delete = true
+        board[i][j-2].delete = true
 
         sfx(2)
         score+=100
@@ -170,9 +171,9 @@ function clears_up(i,j)
         board[i][j+2].color == color then
 
         printh(drop.nr .. " - match to right")
-        board[i][j].color = nil
-        board[i][j+1].color = nil
-        board[i][j+2].color = nil
+        board[i][j].delete = true
+        board[i][j+1].delete = true
+        board[i][j+2].delete = true
 
         sfx(2)
         score+=100
@@ -184,9 +185,9 @@ function clears_up(i,j)
     -- if board[i][j+1].color == 
     --     color == board[i][j+2].color then
     --     printh("match to right")
-    --     board[i][j].color = nil
-    --     board[i][j+1].color = nil
-    --     board[i][j+2].color = nil
+    --     board[i][j].delete = true
+    --     board[i][j+1].delete = true
+    --     board[i][j+2].delete = true
     --
         -- gravity()
     -- end
@@ -198,9 +199,9 @@ function clears_up(i,j)
         then
 
         printh(drop.nr .. "match to bottom")
-        board[i][j].color = nil
-        board[i+1][j].color = nil
-        board[i+2][j].color = nil
+        board[i][j].delete = true
+        board[i+1][j].delete = true
+        board[i+2][j].delete = true
 
         sfx(2)
         score+=100
@@ -215,9 +216,9 @@ function clears_up(i,j)
         then
 
         printh(drop.nr .. "match to top")
-        board[i][j].color = nil
-        board[i-1][j].color = nil
-        board[i-2][j].color = nil
+        board[i][j].delete = true
+        board[i-1][j].delete = true
+        board[i-2][j].delete = true
 
         sfx(2)
         score+=100
@@ -234,7 +235,7 @@ function gravity()
         for j=0,max_columns do
             if i+1 < max_lines and not board[i+1][j].color then
                 board[i+1][j].color = board[i][j].color
-                board[i][j].color = nil
+                board[i][j].delete = true
             end
         end
     end
@@ -296,6 +297,17 @@ end
                 clears_up(i,j)
 
                 spr(blocked_spot.color, board[i][j].x, board[i][j].y)
+            end
+        end
+    end
+
+    -- Clear up all lines that have been set to be deleted
+    -- TODO Add Animation
+    for i=0,max_lines do
+        for j=0,max_columns do
+            if board[i][j].delete == true then
+                board[i][j].delete = false
+                board[i][j].color = nil
             end
         end
     end
