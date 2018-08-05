@@ -129,7 +129,10 @@ function clears_up(i,j)
     })
     
     color = board[i][j].color
-    if j > 2 and board[i][j-1].color == color and board[i][j-2].color == color then
+    if j > 2 and
+        board[i][j-1].color == color and
+        board[i][j-2].color == color
+        then
 
         printh("MATCH to left")
         board[i][j].color = nil
@@ -138,10 +141,10 @@ function clears_up(i,j)
     end
 
     -- To the right 0xx
+    -- TODO Bug when all to the right
     if j < max_columns and
-        board[i][j].color ==
-        board[i][j+1].color ==
-        board[i][j+2].color then
+        board[i][j+1].color == color and
+        board[i][j+2].color == color then
 
         printh("MATCH to right")
         board[i][j].color = nil
