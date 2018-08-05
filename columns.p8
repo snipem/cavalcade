@@ -5,11 +5,20 @@ __lua__
 -- by Matthias Küch
 -- run: ./reload.sh
 
+-- TODO
+-- Next stone
+-- Level
+-- Multi resolve
+-- Title screen
+-- Background music
+
 board = {}
 bottom_left = 32
 bottom_right = 96
 
 drop = {}
+drop.nr = 0
+
 next_drop = {}
 
 max_lines = 16
@@ -25,7 +34,7 @@ nr_cal = 0
 score = 0
 
 function reset_board()
-    printh("resetting board...")
+    printh(drop.nr .. "resetting board...")
     for i=0,max_lines do
     board[i] = {}     -- create a new row
         for j=0,max_columns do
@@ -44,6 +53,7 @@ function drop_new ()
     -- starting point for drop
     drop.i = 0
     drop.j = 3
+    drop.nr += 1
     drop.colors = next_drop.colors
     next_drop.colors = generate_new_colors()
     drop.timer = 10
@@ -68,7 +78,7 @@ end
 
 
 function _init()
-    printh("called _init")
+    printh(drop.nr .. "called _init")
     reset_board()
     -- initial set of colors
     next_drop.colors = generate_new_colors()
@@ -80,15 +90,15 @@ function _update()
     block_below = false
 
     if board[drop.i+1][drop.j].color then
-        printh("found block below")
+        printh(drop.nr .. " - found block below")
         block_below = true
     elseif drop.i == max_lines-1 then
-        printh("found bottom below")
+        printh(drop.nr .. " - found bottom below")
         block_below = true
     end
 
     if block_below then
-        printh("drop ended")
+        printh(drop.nr .. " -drop ended")
         if drop.i > 0 then
             board[drop.i][drop.j].color = drop.colors[1]
             board[drop.i-1][drop.j].color = drop.colors[2]
@@ -140,7 +150,7 @@ function clears_up(i,j)
         board[i][j-2].color == color
         then
 
-        printh("match to left")
+        printh(drop.nr .. " - match to left")
         board[i][j].color = nil
         board[i][j-1].color = nil
         board[i][j-2].color = nil
@@ -156,7 +166,7 @@ function clears_up(i,j)
         board[i][j+1].color == color and
         board[i][j+2].color == color then
 
-        printh("match to right")
+        printh(drop.nr .. " - match to right")
         board[i][j].color = nil
         board[i][j+1].color = nil
         board[i][j+2].color = nil
@@ -184,7 +194,7 @@ function clears_up(i,j)
         board[i+2][j].color == color
         then
 
-        printh("match to bottom")
+        printh(drop.nr .. "match to bottom")
         board[i][j].color = nil
         board[i+1][j].color = nil
         board[i+2][j].color = nil
@@ -201,7 +211,7 @@ function clears_up(i,j)
         board[i-2][j].color == color
         then
 
-        printh("match to top")
+        printh(drop.nr .. "match to top")
         board[i][j].color = nil
         board[i-1][j].color = nil
         board[i-2][j].color = nil
@@ -252,8 +262,8 @@ end
     if (drop.i > 1) then
     spr(drop.colors[3], board[drop.i-2][drop.j].x, board[drop.i-2][drop.j].y)
 end
-    print("i=" .. drop.i, 103,25, 7)
-    print("j=" .. drop.j, 103,34, 7)
+    print("i=" .. drop.i, 10,25, 7)
+    print("j=" .. drop.j, 10,34, 7)
     -- print("fps=" .. stat(8), 103,43, 7)
 
     print("score", 98,58, 7)
@@ -265,7 +275,7 @@ end
 
             blocked_spot = board[i][j]
             if blocked_spot.color then
-                -- printh("blocked spot in: " .. i ..",".. j)
+                -- printh(drop.nr .. "blocked spot in: " .. i ..",".. j)
                 -- todo this calculates everything all the time and is very slow
                 clears_up(i,j)
 
