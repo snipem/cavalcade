@@ -16,7 +16,7 @@ max_lines = 16
 max_columns = 5
 
 -- bigger is slower
-speed = 8
+speed = 18
 
 number_of_colors = 6
 
@@ -26,7 +26,6 @@ function reset_board()
     board[i] = {}     -- create a new row
         for j=0,max_columns do
             slot = {}
-            slot.empty = false
             -- start from below
             spacer = 8
             slot.x = spacer + bottom_left + j * 8
@@ -47,7 +46,11 @@ function drop_new ()
 end
 
 function generate_new_colors()
-    colors = { rnd(number_of_colors), rnd(number_of_colors), rnd(number_of_colors) }
+    colors = {
+        flr(rnd(number_of_colors)),
+        flr(rnd(number_of_colors)),
+        flr(rnd(number_of_colors))
+    }
     return colors
 end
 
@@ -90,7 +93,7 @@ function _update()
             print("Game Over")
             _init()
         end
-        calculate_points()
+        gravity()
         drop_new()
     else
 
@@ -117,13 +120,55 @@ function _update()
     drop.timer += 1
 end
 
-function calculate_points()
+function clears_up(i,j)
     -- TODO Calculate Points and remove stones
-    printh("Calculation not yet implemented")
+
+    -- To the left xx0 if there is space to the left
+    debug.print({
+        board
+    })
+    
+    color = board[i][j].color
+    if j > 2 and board[i][j-1].color == color and board[i][j-2].color == color then
+
+        printh("MATCH to left")
+        board[i][j].color = nil
+        board[i][j-1].color = nil
+        board[i][j-2].color = nil
+    end
+
+    -- To the right 0xx
+    if j < max_columns and
+        board[i][j].color ==
+        board[i][j+1].color ==
+        board[i][j+2].color then
+
+        printh("MATCH to right")
+        board[i][j].color = nil
+        board[i][j+1].color = nil
+        board[i][j+2].color = nil
+    end
+
+    -- xx0xx 4!
+    -- if board[i][j+1].color == 
+    --     color == board[i][j+2].color then
+    --     printh("MATCH to right")
+    --     board[i][j].color = nil
+    --     board[i][j+1].color = nil
+    --     board[i][j+2].color = nil
+    -- end
+
+    -- Upwards
+    -- Downwards
+end
+
+function gravity()
+    -- TODO Invoke gravity for removed stones
+    printh("Gravity not yet implemented")
 end
 
 function rotate()
-    -- TODO Find a better way
+    -- TODO Find a better way to copy values
     first = drop.colors[1]
     second = drop.colors[2]
     third = drop.colors[3]
@@ -154,8 +199,13 @@ end
 
             blocked_spot = board[i][j]
             if blocked_spot.color then
-                printh("Blocked spot in: " .. i ..",".. j)
-                spr(blocked_spot.color, board[i][j].x, board[i][j].y)
+                -- printh("Blocked spot in: " .. i ..",".. j)
+                if not clears_up(i,j) then
+                    spr(blocked_spot.color, board[i][j].x, board[i][j].y)
+                else
+                    printr("CLEAR BLOCK")
+                -- TODO remove block
+                end
             end
         end
     end
@@ -174,6 +224,41 @@ else
     poke(0x4300,0)
 end
 --- hack for external editor
+--
+-- DEBUGGING
+--
+debug = {}
+function debug.tstr(t, indent)
+ indent = indent or 0
+ local indentstr = ''
+ for i=0,indent do
+  indentstr = indentstr .. ' '
+ end
+ local str = ''
+ for k, v in pairs(t) do
+  if type(v) == 'table' then
+   str = str .. indentstr .. k .. '\n' .. debug.tstr(v, indent + 1) .. '\n'
+  else
+   str = str .. indentstr .. tostr(k) .. ': ' .. tostr(v) .. '\n'
+  end
+ end
+  str = sub(str, 1, -2)
+ return str
+end
+function debug.print(...)
+ printh("\n")
+ for v in all{...} do
+  if type(v) == "table" then
+   printh(debug.tstr(v))
+  elseif type(v) == "nil" then
+    printh("nil")
+  else
+   printh(v)
+  end
+ end
+end
+
+---
 
 __gfx__
 aaaaaaaacccccccc00888800000990000eeeeee000bbbb0000000000000000000000000000000000000000000000000000000000000000000000000000000000
