@@ -6,9 +6,9 @@ __lua__
 -- run: ./reload.sh
 
 -- TODO
--- Next stone
 -- Level
--- Multi resolve
+-- Maybe there is a problem at multi resolve, maybe related to gravity
+---- Problem is: it's removing more than one line if a match 3 occurs, even those not affected
 -- Title screen
 -- Background music
 
@@ -28,12 +28,16 @@ debug_mode = true
 
 -- bigger is slower
 speed = 18
+level = 1
 
 number_of_colors = 6
 
 nr_cal = 0
 
 score = 0
+
+game_over_timer = 0
+is_playing = true
 
 function reset_board()
     printh(drop.nr .. " - resetting board...")
@@ -83,12 +87,24 @@ end
 function _init()
     printh(drop.nr .. " - called _init")
     reset_board()
+    score = 0
+    level = 1
     -- initial set of colors
     next_drop.colors = generate_new_colors()
     drop_new()
 end
 
 function _update()
+    if is_playing then
+        play_game()
+    elseif game_over_timer > 0 then
+        game_over_timer -= 1
+    else
+        is_playing = true
+    end
+end
+
+function play_game()
     -- only if drop is still in free fall
     block_below = false
 
@@ -105,9 +121,12 @@ function _update()
         if drop.i > 0 then
             board[drop.i][drop.j].color = drop.colors[1]
             board[drop.i-1][drop.j].color = drop.colors[2]
+            -- TODO here is a bug when all stack up to the top?
             board[drop.i-2][drop.j].color = drop.colors[3]
         else
             --  Game over
+            game_over_timer = 3 * 30
+            is_playing = false
             sfx(3)
             _init()
         end
@@ -255,6 +274,18 @@ function rotate()
 end
 
 function _draw ()
+    if is_playing then
+        draw_game()
+    else
+        cls()
+
+        print ("Score: " .. score, 40, 50)
+        print ("game over", 45, 64)
+        print (flr(game_over_timer / 10), 64, 78)
+    end
+end
+
+function draw_game ()
     cls()
     map( 0, 0, 0, 0, 128, 128)
 
@@ -283,8 +314,15 @@ end
         print("fps=" .. stat(8), 7,43, 7)
     end
 
+
+    -- Score
     print("score", 98,58, 7)
     print(score, 98,64, 7)
+
+    -- Level
+    rectfill(96,80, 119,95, 0)
+    print("level", 98,82, 7)
+    print(level, 98,88, 7)
 
     -- draw existing board
     for i=0,max_lines do
