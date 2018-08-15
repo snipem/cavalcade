@@ -87,7 +87,6 @@ end
 function _init()
     printh(drop.nr .. " - called _init")
     reset_board()
-    score = 0
     level = 1
     -- initial set of colors
     next_drop.colors = generate_new_colors()
@@ -100,6 +99,7 @@ function _update()
     elseif game_over_timer > 0 then
         game_over_timer -= 1
     else
+        _init()
         is_playing = true
     end
 end
@@ -121,8 +121,12 @@ function play_game()
         if drop.i > 0 then
             board[drop.i][drop.j].color = drop.colors[1]
             board[drop.i-1][drop.j].color = drop.colors[2]
+
             -- TODO here is a bug when all stack up to the top?
+            if drop.i > 1 then
             board[drop.i-2][drop.j].color = drop.colors[3]
+            end
+
         else
             --  Game over
             game_over_timer = 3 * 30
