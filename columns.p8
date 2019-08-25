@@ -1,16 +1,16 @@
 pico-8 cartridge // http://www.pico-8.com
 version 16
 __lua__
--- Columns
--- by Matthias Küch
+-- columns
+-- by matthias küch
 -- run: ./reload.sh
 
--- TODO
--- Level
--- Maybe there is a problem at multi resolve, maybe related to gravity
----- Problem is: it's removing more than one line if a match 3 occurs, even those not affected
--- Title screen
--- Background music
+-- todo
+-- level
+-- maybe there is a problem at multi resolve, maybe related to gravity
+---- problem is: it's removing more than one line if a match 3 occurs, even those not affected
+-- title screen
+-- background music
 
 board = {}
 bottom_left = 32
@@ -122,13 +122,13 @@ function play_game()
             board[drop.i][drop.j].color = drop.colors[1]
             board[drop.i-1][drop.j].color = drop.colors[2]
 
-            -- TODO here is a bug when all stack up to the top?
+            -- todo here is a bug when all stack up to the top?
             if drop.i > 1 then
             board[drop.i-2][drop.j].color = drop.colors[3]
             end
 
         else
-            --  Game over
+            --  game over
             game_over_timer = 3 * 30
             is_playing = false
             sfx(3)
@@ -283,7 +283,7 @@ function _draw ()
     else
         cls()
 
-        print ("Score: " .. score, 40, 50)
+        print ("score: " .. score, 40, 50)
         print ("game over", 45, 64)
         print (flr(game_over_timer / 10), 64, 78)
     end
@@ -302,7 +302,7 @@ end
     spr(drop.colors[3], board[drop.i-2][drop.j].x, board[drop.i-2][drop.j].y)
 end
 
-    -- Draw next. Order has to be reversed since its the way the drop is rendered.
+    -- draw next. order has to be reversed since its the way the drop is rendered.
     spr(next_drop.colors[1], 108, 32)
     spr(next_drop.colors[2], 108, 24)
     spr(next_drop.colors[3], 108, 16)
@@ -319,11 +319,11 @@ end
     end
 
 
-    -- Score
+    -- score
     print("score", 98,58, 7)
     print(score, 98,64, 7)
 
-    -- Level
+    -- level
     rectfill(96,80, 119,95, 0)
     print("level", 98,82, 7)
     print(level, 98,88, 7)
@@ -343,8 +343,8 @@ end
         end
     end
 
-    -- Clear up all lines that have been set to be deleted
-    -- TODO Add Animation
+    -- clear up all lines that have been set to be deleted
+    -- todo add animation
     for i=0,max_lines do
         for j=0,max_columns do
             if board[i][j].delete == true then
