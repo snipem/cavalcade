@@ -25,7 +25,7 @@ next_drop = {}
 max_lines = 16
 max_columns = 5
 
-debug_mode = true
+debug_mode = false
 
 -- higher is slower
 speed = 18
@@ -54,15 +54,33 @@ function reset_board()
             board[i][j] = slot
         end
     end
-    setup_test_board()
+
+    -- Base board for debug mode
+    if debug_mode then
+        setup_test_board()
+    end
 
 end
 
 function setup_test_board ()
-    board[2][2].color = 1
-    board[3][2].color = 2
-    board[2][2].delete = false
-    board[3][2].delete = false
+    -- First stack
+    board[15][1].color = 1
+    board[14][1].color = 3
+    board[13][1].color = 3
+
+    -- Second stack
+    board[15][2].color = 4
+    board[14][2].color = 2
+    board[13][2].color = 2
+
+    -- Stack were drop falls
+    board[15][3].color = 1
+    board[14][3].color = 3
+    board[13][3].color = 3
+
+    --board[15][1].delete = false
+    --board[14][2].delete = false
+    --board[13][3].delete = false
 end
 
 function drop_new ()
@@ -99,6 +117,11 @@ function _init()
     level = 1
     -- initial set of colors
     next_drop.colors = generate_new_colors()
+
+    -- drop stones matching to predefined board
+    if debug_mode then
+        next_drop.colors = {3,0,0}
+    end
     drop_new()
 end
 
@@ -179,38 +202,46 @@ function clears_up(i,j)
     -- printh("calculating" .. nr_cal)
     nr_cal +=1
 
-    -- to the left xx0 if there is space to the left
+    -- color of the block to calculate for
     color = board[i][j].color
+
+    -- Skip calculation if already marked for deletion
+    if board[i][j].delete == true then
+        printh("Already marked for deletion, skipping")
+        return
+    end
+
+    -- to the left xx0 if there is space to the left
     if j > 2 and
-        board[i][j-1].color == color and
-        board[i][j-2].color == color
-        then
+    board[i][j-1].color == color and
+    board[i][j-2].color == color
+    then
 
-        printh(drop.nr .. " - match to left")
-        board[i][j].delete = true
-        board[i][j-1].delete = true
-        board[i][j-2].delete = true
+    printh(drop.nr .. " - match to left")
+    board[i][j].delete = true
+    board[i][j-1].delete = true
+    board[i][j-2].delete = true
 
-        sfx(2)
-        score+=100
+    sfx(2)
+    score+=100
 
-        gravity()
+    gravity()
     end
 
     -- to the right 0xx
     if j <= max_columns - 2 and
-        board[i][j+1].color == color and
-        board[i][j+2].color == color then
+    board[i][j+1].color == color and
+    board[i][j+2].color == color then
 
-        printh(drop.nr .. " - match to right")
-        board[i][j].delete = true
-        board[i][j+1].delete = true
-        board[i][j+2].delete = true
+    printh(drop.nr .. " - match to right")
+    board[i][j].delete = true
+    board[i][j+1].delete = true
+    board[i][j+2].delete = true
 
-        sfx(2)
-        score+=100
+    sfx(2)
+    score+=100
 
-        gravity()
+    gravity()
     end
 
     -- xx0xx 4!
@@ -221,45 +252,46 @@ function clears_up(i,j)
     --     board[i][j+1].delete = true
     --     board[i][j+2].delete = true
     --
-        -- gravity()
+    -- gravity()
     -- end
 
     -- downwards
     if i <= max_lines - 2 and
-        board[i+1][j].color == color and
-        board[i+2][j].color == color
-        then
+    board[i+1][j].color == color and
+    board[i+2][j].color == color
+    then
 
-        printh(drop.nr .. "match to bottom")
-        board[i][j].delete = true
-        board[i+1][j].delete = true
-        board[i+2][j].delete = true
+    printh(drop.nr .. " - match to bottom")
+    board[i][j].delete = true
+    board[i+1][j].delete = true
+    board[i+2][j].delete = true
 
-        sfx(2)
-        score+=100
+    sfx(2)
+    score+=100
 
-        gravity()
+    gravity()
     end
 
     -- upwards
-    if i > 2 and
-        board[i-1][j].color == color and
-        board[i-2][j].color == color
-        then
-
-        printh(drop.nr .. "match to top")
-        board[i][j].delete = true
-        board[i-1][j].delete = true
-        board[i-2][j].delete = true
-
-        sfx(2)
-        score+=100
-
-        gravity()
-    end
+    --if i > 2 and
+    --board[i-1][j].color == color and
+    --board[i-2][j].color == color
+    --then
+    --
+    --printh(drop.nr .. "match to top")
+    --board[i][j].delete = true
+    --board[i-1][j].delete = true
+    --board[i-2][j].delete = true
+    --
+    --sfx(2)
+    --score+=100
+    --
+    --gravity()
+    --end
 
     gravity()
-end
+    return
+    end
 
 function gravity()
     -- todo invoke gravity for removed stones
