@@ -1,6 +1,7 @@
 pico-8 cartridge // http://www.pico-8.com
 version 16
 __lua__
+-- run: reload.sh
 -- columns
 -- by matthias küch
 -- run: ./reload.sh
@@ -26,7 +27,7 @@ max_columns = 5
 
 debug_mode = true
 
--- bigger is slower
+-- higher is slower
 speed = 18
 level = 1
 
@@ -53,14 +54,22 @@ function reset_board()
             board[i][j] = slot
         end
     end
+    setup_test_board()
 
+end
+
+function setup_test_board ()
+    board[2][2].color = 1
+    board[3][2].color = 2
+    board[2][2].delete = false
+    board[3][2].delete = false
 end
 
 function drop_new ()
     -- starting point for drop
     drop.i = 0
     drop.j = 3
-    drop.nr += 1
+    drop.nr = drop.nr + 1
     drop.colors = next_drop.colors
     next_drop.colors = generate_new_colors()
     drop.timer = 10
@@ -357,7 +366,6 @@ end
     flip()
 end
 
-
 --- hack for using external editor
 if peek(0x4300) == 0 then
     poke(0x4300,1)
@@ -569,4 +577,3 @@ __music__
 00 41414141
 00 41414141
 00 41414141
-
