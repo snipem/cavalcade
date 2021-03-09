@@ -2,4 +2,6 @@
 
 A Columns clone for PICO-8
 
-This is in no way affiliated with SEGA.
+![calvacade.p8](res/calvacade.p8.png)
+
+Calvacade is in no way affiliated with SEGA.
