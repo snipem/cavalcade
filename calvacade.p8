@@ -38,7 +38,7 @@ game_over_timer = 0
 is_playing = true
 
 function reset_board()
-    printh(drop.nr .. " - resetting board...")
+    printd(drop.nr .. " - resetting board...")
     for i=0,max_lines do
     board[i] = {}     -- create a new row
         for j=0,max_columns do
@@ -71,11 +71,18 @@ function setup_test_board ()
     board[13][2].color = 2
 
     -- Stack were drop falls
-    board[15][3].color = 1
-    board[14][3].color = 3
     board[13][3].color = 3
+    board[14][3].color = 3
+    board[15][3].color = 1
 
 end
+
+-- Is upside down
+debug_drop = {
+    3,
+    3,
+    1
+}
 
 function drop_new ()
     -- starting point for drop
@@ -110,7 +117,7 @@ end
 
 
 function _init()
-    printh(drop.nr .. " - called _init")
+    printd(drop.nr .. " - called _init")
     reset_board()
     level = 1
     -- initial set of colors
@@ -118,7 +125,7 @@ function _init()
 
     -- drop stones matching to predefined board
     if debug_mode then
-        next_drop.colors = {3,0,0}
+        next_drop.colors = debug_drop
     end
     drop_new()
 end
@@ -139,15 +146,15 @@ function play_game()
     block_below = false
 
     if board[drop.i+1][drop.j].color then
-        printh(drop.nr .. " - found block below")
+        printd(drop.nr .. " - found block below")
         block_below = true
     elseif drop.i == max_lines-1 then
-        printh(drop.nr .. " - found bottom below")
+        printd(drop.nr .. " - found bottom below")
         block_below = true
     end
 
     if block_below then
-        printh(drop.nr .. " - drop ended")
+        printd(drop.nr .. " - drop ended")
         if drop.i > 0 then
             board[drop.i][drop.j].color = drop.colors[1]
             board[drop.i-1][drop.j].color = drop.colors[2]
@@ -197,7 +204,7 @@ function clears_up(i,j)
     -- todo performance is bad
     -- todo allow for "l" constellations, create debug map. maybe nil elements at end
 
-    -- printh("calculating" .. nr_cal)
+    -- printd("calculating" .. nr_cal)
     nr_cal +=1
 
     -- color of the block to calculate for
@@ -214,7 +221,7 @@ function clears_up(i,j)
     board[i][j-2].color == color
     then
 
-        printh(drop.nr .. " - match to left")
+        printd(drop.nr .. " - match to left")
         board[i][j].delete = true
         board[i][j-1].delete = true
         board[i][j-2].delete = true
@@ -230,7 +237,7 @@ function clears_up(i,j)
     board[i][j+1].color == color and
     board[i][j+2].color == color then
 
-        printh(drop.nr .. " - match to right")
+        printd(drop.nr .. " - match to right")
         board[i][j].delete = true
         board[i][j+1].delete = true
         board[i][j+2].delete = true
@@ -247,7 +254,7 @@ function clears_up(i,j)
     board[i+2][j].color == color
     then
 
-        printh(drop.nr .. " - match to bottom")
+        printd(drop.nr .. " - match to bottom")
         board[i][j].delete = true
         board[i+1][j].delete = true
         board[i+2][j].delete = true
@@ -344,7 +351,7 @@ end
 
             blocked_spot = board[i][j]
             if blocked_spot.color then
-                -- printh(drop.nr .. "blocked spot in: " .. i ..",".. j)
+                -- printd(drop.nr .. "blocked spot in: " .. i ..",".. j)
                 -- todo this calculates everything all the time and is very slow
                 clears_up(i,j)
 
@@ -365,6 +372,12 @@ end
     end
 
     flip()
+end
+
+function printd(message)
+    if debug_mode then
+        printh(message)
+    end
 end
 
 ---
