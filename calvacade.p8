@@ -93,6 +93,10 @@ function generate_new_colors()
         flr(rnd(number_of_colors)),
         flr(rnd(number_of_colors))
     }
+    -- recalculate colors if all identical
+    if colors[1] == colors[2] == colors[3] then
+       return generate_new_colors()
+    end
     return colors
 end
 
