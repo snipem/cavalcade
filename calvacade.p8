@@ -1,15 +1,12 @@
 pico-8 cartridge // http://www.pico-8.com
 version 16
 __lua__
--- run: reload.sh
 -- calvacade
 -- by matthias küch
 -- run: ./reload.sh
 
 -- todo
 -- level
--- maybe there is a problem at multi resolve, maybe related to gravity
----- problem is: it's removing more than one line if a match 3 occurs, even those not affected
 -- title screen
 -- background music
 
@@ -78,9 +75,6 @@ function setup_test_board ()
     board[14][3].color = 3
     board[13][3].color = 3
 
-    --board[15][1].delete = false
-    --board[14][2].delete = false
-    --board[13][3].delete = false
 end
 
 function drop_new ()
@@ -207,7 +201,6 @@ function clears_up(i,j)
 
     -- Skip calculation if already marked for deletion
     if board[i][j].delete == true then
-        printh("Already marked for deletion, skipping")
         return
     end
 
@@ -217,15 +210,15 @@ function clears_up(i,j)
     board[i][j-2].color == color
     then
 
-    printh(drop.nr .. " - match to left")
-    board[i][j].delete = true
-    board[i][j-1].delete = true
-    board[i][j-2].delete = true
+        printh(drop.nr .. " - match to left")
+        board[i][j].delete = true
+        board[i][j-1].delete = true
+        board[i][j-2].delete = true
 
-    sfx(2)
-    score+=100
+        sfx(2)
+        score+=100
 
-    gravity()
+        gravity()
     end
 
     -- to the right 0xx
@@ -233,27 +226,16 @@ function clears_up(i,j)
     board[i][j+1].color == color and
     board[i][j+2].color == color then
 
-    printh(drop.nr .. " - match to right")
-    board[i][j].delete = true
-    board[i][j+1].delete = true
-    board[i][j+2].delete = true
+        printh(drop.nr .. " - match to right")
+        board[i][j].delete = true
+        board[i][j+1].delete = true
+        board[i][j+2].delete = true
 
-    sfx(2)
-    score+=100
+        sfx(2)
+        score+=100
 
-    gravity()
+        gravity()
     end
-
-    -- xx0xx 4!
-    -- if board[i][j+1].color == 
-    --     color == board[i][j+2].color then
-    --     printh("match to right")
-    --     board[i][j].delete = true
-    --     board[i][j+1].delete = true
-    --     board[i][j+2].delete = true
-    --
-    -- gravity()
-    -- end
 
     -- downwards
     if i <= max_lines - 2 and
@@ -261,36 +243,18 @@ function clears_up(i,j)
     board[i+2][j].color == color
     then
 
-    printh(drop.nr .. " - match to bottom")
-    board[i][j].delete = true
-    board[i+1][j].delete = true
-    board[i+2][j].delete = true
+        printh(drop.nr .. " - match to bottom")
+        board[i][j].delete = true
+        board[i+1][j].delete = true
+        board[i+2][j].delete = true
 
-    sfx(2)
-    score+=100
+        sfx(2)
+        score+=100
 
-    gravity()
+        gravity()
     end
 
-    -- upwards
-    --if i > 2 and
-    --board[i-1][j].color == color and
-    --board[i-2][j].color == color
-    --then
-    --
-    --printh(drop.nr .. "match to top")
-    --board[i][j].delete = true
-    --board[i-1][j].delete = true
-    --board[i-2][j].delete = true
-    --
-    --sfx(2)
-    --score+=100
-    --
-    --gravity()
-    --end
-
     gravity()
-    return
     end
 
 function gravity()
@@ -343,7 +307,8 @@ end
     spr(drop.colors[3], board[drop.i-2][drop.j].x, board[drop.i-2][drop.j].y)
 end
 
-    -- draw next. order has to be reversed since its the way the drop is rendered.
+    -- next preview
+    -- order has to be reversed since its the way the drop is rendered.
     spr(next_drop.colors[1], 108, 32)
     spr(next_drop.colors[2], 108, 24)
     spr(next_drop.colors[3], 108, 16)
@@ -369,7 +334,7 @@ end
     print("level", 98,82, 7)
     print(level, 98,88, 7)
 
-    -- draw existing board
+    -- draw board
     for i=0,max_lines do
         for j=0,max_columns do
 
@@ -396,50 +361,6 @@ end
     end
 
     flip()
-end
-
---- hack for using external editor
-if peek(0x4300) == 0 then
-    poke(0x4300,1)
-    printh("------- reloading")
-    load("columns")
-    run()
-else
-    poke(0x4300,0)
-end
---- hack for external editor
---
--- debugging
---
-debug = {}
-function debug.tstr(t, indent)
- indent = indent or 0
- local indentstr = ''
- for i=0,indent do
-  indentstr = indentstr .. ' '
- end
- local str = ''
- for k, v in pairs(t) do
-  if type(v) == 'table' then
-   str = str .. indentstr .. k .. '\n' .. debug.tstr(v, indent + 1) .. '\n'
-  else
-   str = str .. indentstr .. tostr(k) .. ': ' .. tostr(v) .. '\n'
-  end
- end
-  str = sub(str, 1, -2)
- return str
-end
-function debug.print(...)
- printh("\n")
- for v in all{...} do
-  if type(v) == "table" then
-   printh(debug.tstr(v))
-  elseif type(v) == "nil" then
-    printh("nil")
-  else
-   printh(v)
-  end
- end
 end
 
 ---
