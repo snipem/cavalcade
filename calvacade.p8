@@ -212,7 +212,7 @@ function clears_up(i,j)
 
     -- Skip calculation if already marked for deletion
     if board[i][j].delete == true then
-        return
+    return
     end
 
     -- to the left xx0 if there is space to the left
@@ -221,15 +221,15 @@ function clears_up(i,j)
     board[i][j-2].color == color
     then
 
-        printd(drop.nr .. " - match to left")
-        board[i][j].delete = true
-        board[i][j-1].delete = true
-        board[i][j-2].delete = true
+    printd(drop.nr .. " - match to left")
+    board[i][j].delete = true
+    board[i][j-1].delete = true
+    board[i][j-2].delete = true
 
-        sfx(2)
-        score+=100
+    sfx(2)
+    score+=100
 
-        gravity()
+    gravity()
     end
 
     -- to the right 0xx
@@ -237,15 +237,15 @@ function clears_up(i,j)
     board[i][j+1].color == color and
     board[i][j+2].color == color then
 
-        printd(drop.nr .. " - match to right")
-        board[i][j].delete = true
-        board[i][j+1].delete = true
-        board[i][j+2].delete = true
+    printd(drop.nr .. " - match to right")
+    board[i][j].delete = true
+    board[i][j+1].delete = true
+    board[i][j+2].delete = true
 
-        sfx(2)
-        score+=100
+    sfx(2)
+    score+=100
 
-        gravity()
+    gravity()
     end
 
     -- downwards
@@ -254,15 +254,21 @@ function clears_up(i,j)
     board[i+2][j].color == color
     then
 
-        printd(drop.nr .. " - match to bottom")
-        board[i][j].delete = true
-        board[i+1][j].delete = true
-        board[i+2][j].delete = true
+    printd(drop.nr .. " - match to bottom")
+    board[i][j].delete = true
+    board[i+1][j].delete = true
+    board[i+2][j].delete = true
 
-        sfx(2)
-        score+=100
+    -- Check if there is another element below the last one, matches 2 elements already in place
+    if i < max_lines - 3 and
+    board[i+3][j].color == color then
+        board[i+3][j].delete = true
+    end
 
-        gravity()
+    sfx(2)
+    score+=100
+
+    gravity()
     end
 
     gravity()
